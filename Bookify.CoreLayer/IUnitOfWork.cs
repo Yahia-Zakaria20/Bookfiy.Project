@@ -13,7 +13,7 @@ namespace Bookify.CoreLayer
 		IGenericRepository<Category> CategoryRepo { get; set; }
 
 
-		Task<int> Complete();
+		Task<int> CompleteAsync();
 
 	}
 }

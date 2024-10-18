@@ -11,5 +11,11 @@ namespace Bookify.CoreLayer.RepositoryLayer.Contract
 	{
 
 	  public Task<IEnumerable<T>> GetAllAsync();
+
+		public void Add(T Entity);
+
+		public void Update(T Entity);
+
+		public Task<T?> GetByIdAsync(int id);	
 	}
 }

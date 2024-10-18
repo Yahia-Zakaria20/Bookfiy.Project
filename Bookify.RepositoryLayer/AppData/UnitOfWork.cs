@@ -20,7 +20,7 @@ namespace Bookify.RepositoryLayer.AppData
 			CategoryRepo = new GenericRepository<Category>(dbContext);
 			_dbContext = dbContext;
 		}
-		public async Task<int> Complete()
+		public async Task<int> CompleteAsync()
 		{
 		   return	await _dbContext.SaveChangesAsync();
 		}

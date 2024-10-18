@@ -18,8 +18,21 @@ namespace Bookify.RepositoryLayer
         {
             _dbContext = dbContext;
         }
+
+        public void Add(T Entity)
+        => _dbContext.Set<T>().Add(Entity); 
+
         public async Task<IEnumerable<T>> GetAllAsync()
          => await _dbContext.Set<T>().ToListAsync();
 
+        public async Task<T?> GetByIdAsync(int id)
+        {
+         return await _dbContext.Set<T>().FindAsync(id);
+        }
+
+        public void Update(T Entity)
+        {
+            _dbContext.Set<T>().Update(Entity); 
+        }
     }
 }
