@@ -47,7 +47,7 @@ namespace Bookfiy.Web.Controllers
         }
 
 		[HttpGet]
-		public async Task<IActionResult> Update(int Id) 
+		public async Task<IActionResult> Edit(int Id) 
 		{				
                 var catogary =await _unitOfWork.CategoryRepo.GetByIdAsync(Id);
 			if (catogary != null)
@@ -65,7 +65,7 @@ namespace Bookfiy.Web.Controllers
 
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public async Task<IActionResult> Update([FromRoute]int Id,CategoryFormViewModel viewModel) // id from route  vmodel from Requestbody Form 
+		public async Task<IActionResult> Edit([FromRoute]int Id,CategoryFormViewModel viewModel) // id from route  vmodel from Requestbody Form 
 		{
 			if (Id != viewModel.Id)
 			   return BadRequest();	
