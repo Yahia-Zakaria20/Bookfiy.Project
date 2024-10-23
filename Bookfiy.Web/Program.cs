@@ -1,4 +1,6 @@
 using Bookfiy.Web.Data;
+using Bookify.CoreLayer;
+using Bookify.RepositoryLayer.AppData;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -20,6 +22,11 @@ namespace Bookfiy.Web
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             webApplicationBuilder.Services.AddControllersWithViews();
 
+            webApplicationBuilder.Services.AddDbContext<StoreDbContext>(options => 
+            options.UseSqlServer(webApplicationBuilder.Configuration.GetConnectionString("StoreConnection")));
+
+            webApplicationBuilder.Services.AddScoped<IUnitOfWork, UnitOfWork>();    
+
             var app = webApplicationBuilder.Build();
 
            var Scope =   app.Services.CreateScope();
@@ -27,12 +34,14 @@ namespace Bookfiy.Web
            var Services =   Scope.ServiceProvider;  
 
          using  var dbcontext = Services.GetRequiredService<ApplicationDbContext>();
+			using var Storedbcontext = Services.GetRequiredService<StoreDbContext>();
 
-        var loggerFactory =   Services.GetRequiredService<ILoggerFactory>();
+			var loggerFactory =   Services.GetRequiredService<ILoggerFactory>();
 
             try
             {
                 dbcontext.Database.Migrate();
+                Storedbcontext.Database.Migrate();
             }
             catch (Exception ex)
             {
