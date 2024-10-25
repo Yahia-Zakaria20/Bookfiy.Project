@@ -1,6 +1,7 @@
 ﻿using Bookfiy.Web.ViewModels;
 using Bookify.CoreLayer;
 using Bookify.CoreLayer.Entites;
+using Bookify.Web.Filters;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Bookfiy.Web.Controllers
@@ -20,18 +21,18 @@ namespace Bookfiy.Web.Controllers
 			return View(Categories);
 		}
 
-		
+		[AjaxOnly]
 		public IActionResult Create() 
 		{ 
-			return View("Form");
+			return PartialView("_Form");
 		}
 
 		[HttpPost]
 		[ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CategoryFormViewModel Vmodel)
         {
-			if (ModelState.IsValid) 
-			{
+			if (!ModelState.IsValid)
+				return BadRequest();
 				//ViewData["Title"] = "Create";
 
                 var Catogery = new Category { Name = Vmodel.Name };
@@ -40,27 +41,25 @@ namespace Bookfiy.Web.Controllers
 
 			    await _unitOfWork.CompleteAsync();
 
-				return RedirectToAction(nameof(Index));
+			return PartialView("_CategoryRow",Catogery);
 				
-			}
-            return View("Form", Vmodel);
+			
         }
 
 		[HttpGet]
-		public async Task<IActionResult> Edit(int Id) 
+		[AjaxOnly]
+		public async Task<IActionResult> Edit(int id) 
 		{				
-                var catogary =await _unitOfWork.CategoryRepo.GetByIdAsync(Id);
-			if (catogary != null)
-			{
+                var catogary =await _unitOfWork.CategoryRepo.GetByIdAsync(id);
+			if (catogary == null)
+				return NotFound();
+			
 				var VModel = new CategoryFormViewModel()
 				{
 					Id = catogary.Id,	
 					Name = catogary.Name
 				};
-				return View("Form", VModel);
-			}
-
-                return NotFound();
+				return PartialView("_Form", VModel);
         }
 
 		[HttpPost]
@@ -82,11 +81,28 @@ namespace Bookfiy.Web.Controllers
 				  var count  =   await _unitOfWork.CompleteAsync();
 
 					if (count > 0)
-						return RedirectToAction(nameof(Index));
+						return PartialView("_CategoryRow", Catogary);
 
-				}
+                }
 				return NotFound(); 
 			
+		}
+
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public async Task<IActionResult> ToggleStatus([FromRoute]int id) 
+		{
+			var cetagory = await _unitOfWork.CategoryRepo.GetByIdAsync(id);
+			if (cetagory is null)
+				return NotFound();
+
+			cetagory.IsDeleted = !cetagory.IsDeleted;
+
+			cetagory.LastUpdate = DateTime.Now;
+
+	      	 await	_unitOfWork.CompleteAsync();
+
+			return Ok(cetagory.LastUpdate.ToString());
 		}
     }
 }

@@ -184,7 +184,7 @@
             /// If parsing several elements, you should specify false, and manually attach the validation
             /// to the form when you are finished. The default is false.</param>
             var $element = $(element),
-                form = $element.parents("form")[0],
+                form = $element.parents("_Form")[0],
                 valInfo, rules, messages;
 
             if (!form) {  // Cannot do client-side validation without a form
@@ -238,8 +238,8 @@
             var $selector = $(selector),
                 $forms = $selector.parents()
                     .addBack()
-                    .filter("form")
-                    .add($selector.find("form"))
+                    .filter("_Form")
+                    .add($selector.find("_Form"))
                     .has("[data-val=true]");
 
             $selector.find("[data-val=true]").each(function () {

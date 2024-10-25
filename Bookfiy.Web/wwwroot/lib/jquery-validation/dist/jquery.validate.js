@@ -123,7 +123,7 @@ $.extend( $.fn, {
 	valid: function() {
 		var valid, validator, errorList;
 
-		if ( $( this[ 0 ] ).is( "form" ) ) {
+		if ( $( this[ 0 ] ).is( "_Form" ) ) {
 			valid = this.validate().form();
 		} else {
 			errorList = [];
@@ -152,7 +152,7 @@ $.extend( $.fn, {
 		}
 
 		if ( !element.form && isContentEditable ) {
-			element.form = this.closest( "form" )[ 0 ];
+			element.form = this.closest( "_Form" )[ 0 ];
 			element.name = this.attr( "name" );
 		}
 
@@ -423,7 +423,7 @@ $.extend( $.validator, {
 
 				// Set form expando on contenteditable
 				if ( !this.form && isContentEditable ) {
-					this.form = $( this ).closest( "form" )[ 0 ];
+					this.form = $( this ).closest( "_Form" )[ 0 ];
 					this.name = $( this ).attr( "name" );
 				}
 
@@ -664,7 +664,7 @@ $.extend( $.validator, {
 
 				// Set form expando on contenteditable
 				if ( isContentEditable ) {
-					this.form = $( this ).closest( "form" )[ 0 ];
+					this.form = $( this ).closest( "_Form" )[ 0 ];
 					this.name = name;
 				}
 
